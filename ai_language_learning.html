@@ -196,6 +196,7 @@
             padding: 2rem;
             margin-bottom: 2rem;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            display: block !important; /* Force display for debugging */
         }
 
         .quiz-container {
@@ -486,10 +487,10 @@
         </div>
 
         <!-- Quiz Section -->
-        <div class="quiz-section" id="quizSection" style="display: none;">
+        <div class="quiz-section" id="quizSection" style="display: block;">
             <h2>🧠 Knowledge Check</h2>
             <div class="quiz-container" id="quizContainer">
-                <!-- Quiz content will be populated by JavaScript -->
+                <p style="text-align: center; color: #7f8c8d;">언어를 선택하면 퀴즈가 표시됩니다.</p>
             </div>
         </div>
 
@@ -934,6 +935,11 @@
             document.getElementById('quizSection').style.display = 'block';
             document.getElementById('vocabularySection').style.display = 'block';
             document.getElementById('statsSection').style.display = 'block';
+            
+            // Debug: Check if quiz section is visible
+            const quizSection = document.getElementById('quizSection');
+            console.log('Quiz section display style:', quizSection.style.display);
+            console.log('Quiz section element:', quizSection);
             
             // Load content
             loadLessons();
