@@ -1077,23 +1077,38 @@
             
             console.log('About to show first quiz:', quizzes[0]);
             
-            // Show first quiz by default
-            showQuiz(0);
-            
-            // Add quiz navigation
+            // Create quiz navigation first
             const quizNav = document.createElement('div');
             quizNav.style.textAlign = 'center';
             quizNav.style.marginTop = '2rem';
+            quizNav.id = 'quizNavigation';
             
             quizzes.forEach((quiz, index) => {
                 const quizBtn = document.createElement('button');
                 quizBtn.className = 'btn';
                 quizBtn.textContent = `퀴즈 ${index + 1}`;
-                quizBtn.onclick = () => showQuiz(index);
+                quizBtn.onclick = () => {
+                    console.log(`Quiz button ${index + 1} clicked`);
+                    showQuiz(index);
+                    // Update active button
+                    document.querySelectorAll('#quizNavigation .btn').forEach(btn => {
+                        btn.style.background = 'linear-gradient(135deg, #3498db, #2980b9)';
+                    });
+                    quizBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+                };
                 quizNav.appendChild(quizBtn);
             });
             
+            // Add navigation to container
             quizContainer.appendChild(quizNav);
+            
+            // Show first quiz by default
+            showQuiz(0);
+            
+            // Highlight first button
+            if (quizNav.children.length > 0) {
+                quizNav.children[0].style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+            }
         }
 
         // Show specific quiz
@@ -1101,9 +1116,15 @@
             const quizContainer = document.getElementById('quizContainer');
             const quizzes = content[currentLanguage].quizzes;
             
-            if (quizIndex >= quizzes.length) return;
+            console.log(`Showing quiz ${quizIndex} of ${quizzes.length} quizzes`);
+            
+            if (quizIndex >= quizzes.length) {
+                console.log('Quiz index out of range');
+                return;
+            }
             
             const quiz = quizzes[quizIndex];
+            console.log('Quiz to show:', quiz);
             
             let quizHTML = `
                 <div class="question">
@@ -1128,13 +1149,21 @@
                 <div id="quizResult" style="margin-top: 1rem; text-align: center;"></div>
             `;
             
-            // Replace existing quiz content
-            const existingQuiz = quizContainer.querySelector('.question');
-            if (existingQuiz) {
-                existingQuiz.parentElement.remove();
+            // Save the navigation
+            const quizNav = document.getElementById('quizNavigation');
+            
+            // Clear the container but preserve navigation
+            quizContainer.innerHTML = '';
+            
+            // Add the new quiz content
+            quizContainer.innerHTML = quizHTML;
+            
+            // Restore the navigation
+            if (quizNav) {
+                quizContainer.appendChild(quizNav);
             }
             
-            quizContainer.insertAdjacentHTML('afterbegin', quizHTML);
+            console.log('Quiz HTML inserted successfully with navigation preserved');
         }
 
         // Select answer
