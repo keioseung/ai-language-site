@@ -930,16 +930,50 @@
             const grid = document.getElementById('quizzesGrid');
             grid.innerHTML = '';
             
-            quizzes.forEach((quiz, index) => {
+            console.log('=== DEBUG: Loading quizzes ===');
+            console.log('Quizzes array:', quizzes);
+            console.log('Quizzes length:', quizzes.length);
+            
+            // Get filter values
+            const languageFilter = document.getElementById('quizLanguageFilter').value;
+            const searchFilter = document.getElementById('quizSearch').value.toLowerCase();
+            
+            console.log('Language filter:', languageFilter);
+            console.log('Search filter:', searchFilter);
+            
+            // Filter quizzes
+            let filteredQuizzes = quizzes;
+            
+            if (languageFilter !== 'all') {
+                filteredQuizzes = filteredQuizzes.filter(quiz => quiz.language === languageFilter);
+                console.log('Filtered by language:', filteredQuizzes);
+            }
+            
+            if (searchFilter) {
+                filteredQuizzes = filteredQuizzes.filter(quiz => 
+                    quiz.question.toLowerCase().includes(searchFilter) ||
+                    quiz.category.toLowerCase().includes(searchFilter)
+                );
+                console.log('Filtered by search:', filteredQuizzes);
+            }
+            
+            if (filteredQuizzes.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #7f8c8d; grid-column: 1 / -1;">해당 조건에 맞는 퀴즈가 없습니다.</p>';
+                return;
+            }
+            
+            filteredQuizzes.forEach((quiz, index) => {
+                console.log(`Quiz ${index}:`, quiz);
+                
                 const card = document.createElement('div');
                 card.className = 'content-card';
                 card.innerHTML = `
-                    <h3>${quiz.question.substring(0, 50)}...</h3>
+                    <h3>${quiz.question ? quiz.question.substring(0, 50) + '...' : '제목 없음'}</h3>
                     <div class="content-meta">
                         언어: ${getLanguageName(quiz.language)} | 
                         카테고리: ${getCategoryName(quiz.category)}
                     </div>
-                    <p><strong>정답:</strong> ${quiz.options[quiz.correctAnswer]}</p>
+                    <p><strong>정답:</strong> ${quiz.options && quiz.options[quiz.correctAnswer] ? quiz.options[quiz.correctAnswer] : '정답 없음'}</p>
                     <div class="content-actions">
                         <button class="btn" onclick="editQuiz(${index})">✏️ 수정</button>
                         <button class="btn btn-danger" onclick="deleteQuiz(${index})">🗑️ 삭제</button>
@@ -947,6 +981,8 @@
                 `;
                 grid.appendChild(card);
             });
+            
+            console.log('=== END DEBUG ===');
         }
 
         function openQuizModal() {
@@ -1075,12 +1111,21 @@
                 createdAt: new Date().toISOString()
             };
             
+            console.log('=== DEBUG: Adding quiz ===');
+            console.log('New quiz object:', quiz);
+            console.log('Options array:', options);
+            console.log('Correct answer index:', quiz.correctAnswer);
+            
             quizzes.push(quiz);
+            console.log('Quizzes array after push:', quizzes);
+            
             saveData();
             loadQuizzes();
             updateDashboard();
             closeQuizModal();
             showNotification('퀴즈가 성공적으로 추가되었습니다! 학습 페이지에서 확인하세요.');
+            
+            console.log('=== END DEBUG ===');
         });
 
         // Delete functions
@@ -1201,6 +1246,14 @@
         // Initialize the admin panel
         window.onload = function() {
             loadData();
+            
+            // Add event listeners for filters
+            document.getElementById('quizLanguageFilter').addEventListener('change', loadQuizzes);
+            document.getElementById('quizSearch').addEventListener('input', loadQuizzes);
+            document.getElementById('lessonLanguageFilter').addEventListener('change', loadLessons);
+            document.getElementById('lessonSearch').addEventListener('input', loadLessons);
+            document.getElementById('vocabLanguageFilter').addEventListener('change', loadVocabulary);
+            document.getElementById('vocabSearch').addEventListener('input', loadVocabulary);
             
             // Add some sample data if empty
             if (lessons.length === 0) {
