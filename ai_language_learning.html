@@ -592,6 +592,7 @@
                 content[currentLanguage].quizzes = adminQuizzesForLang;
             } else {
                 console.log(`No admin quizzes found for ${currentLanguage}, keeping default quizzes`);
+                // Keep the original default quizzes
             }
             
             console.log(`Final content for ${currentLanguage}:`, {
@@ -1259,9 +1260,24 @@
             
             // Debug: Check admin data on load
             console.log('=== DEBUG: Checking admin data on page load ===');
-            console.log('Admin Lessons:', JSON.parse(localStorage.getItem('adminLessons') || '[]'));
-            console.log('Admin Vocabulary:', JSON.parse(localStorage.getItem('adminVocabulary') || '[]'));
-            console.log('Admin Quizzes:', JSON.parse(localStorage.getItem('adminQuizzes') || '[]'));
+            const adminLessons = JSON.parse(localStorage.getItem('adminLessons') || '[]');
+            const adminVocabulary = JSON.parse(localStorage.getItem('adminVocabulary') || '[]');
+            const adminQuizzes = JSON.parse(localStorage.getItem('adminQuizzes') || '[]');
+            
+            console.log('Admin Lessons:', adminLessons);
+            console.log('Admin Vocabulary:', adminVocabulary);
+            console.log('Admin Quizzes:', adminQuizzes);
+            
+            // Check if there are any quizzes for Korean
+            const koreanQuizzes = adminQuizzes.filter(quiz => quiz.language === 'ko');
+            console.log('Korean admin quizzes:', koreanQuizzes);
+            
+            if (koreanQuizzes.length === 0) {
+                console.log('⚠️ No admin quizzes found for Korean! Please add quizzes in admin panel.');
+            } else {
+                console.log(`✅ Found ${koreanQuizzes.length} admin quizzes for Korean`);
+            }
+            
             console.log('=== END DEBUG ===');
             
             // Set default language
