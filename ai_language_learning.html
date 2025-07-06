@@ -589,9 +589,12 @@
             // IMPORTANT: Replace quizzes with admin quizzes if they exist
             if (adminQuizzesForLang.length > 0) {
                 console.log(`Replacing quizzes with ${adminQuizzesForLang.length} admin quizzes for ${currentLanguage}`);
+                console.log('Admin quizzes to replace with:', adminQuizzesForLang);
                 content[currentLanguage].quizzes = adminQuizzesForLang;
+                console.log('✅ Quizzes replaced successfully');
             } else {
                 console.log(`No admin quizzes found for ${currentLanguage}, keeping default quizzes`);
+                console.log('Current default quizzes:', content[currentLanguage].quizzes);
                 // Keep the original default quizzes
             }
             
