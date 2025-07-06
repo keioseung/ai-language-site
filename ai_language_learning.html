@@ -551,10 +551,18 @@
             const adminVocabulary = JSON.parse(localStorage.getItem('adminVocabulary') || '[]');
             const adminQuizzes = JSON.parse(localStorage.getItem('adminQuizzes') || '[]');
             
+            console.log('Raw admin data:', { adminLessons, adminVocabulary, adminQuizzes });
+            
             // Get admin content for current language
             const adminLessonsForLang = adminLessons.filter(lesson => lesson.language === currentLanguage);
             const adminVocabularyForLang = adminVocabulary.filter(vocab => vocab.language === currentLanguage);
             const adminQuizzesForLang = adminQuizzes.filter(quiz => quiz.language === currentLanguage);
+            
+            console.log(`Filtered admin content for ${currentLanguage}:`, {
+                lessons: adminLessonsForLang,
+                vocabulary: adminVocabularyForLang,
+                quizzes: adminQuizzesForLang
+            });
             
             // Merge admin lessons with default lessons (don't overwrite, append)
             if (adminLessonsForLang.length > 0) {
@@ -578,15 +586,19 @@
                 }
             });
             
-            // Merge admin quizzes with default quizzes (don't overwrite, append)
+            // IMPORTANT: Replace quizzes with admin quizzes if they exist
             if (adminQuizzesForLang.length > 0) {
-                content[currentLanguage].quizzes = [
-                    ...content[currentLanguage].quizzes,
-                    ...adminQuizzesForLang
-                ];
+                console.log(`Replacing quizzes with ${adminQuizzesForLang.length} admin quizzes for ${currentLanguage}`);
+                content[currentLanguage].quizzes = adminQuizzesForLang;
+            } else {
+                console.log(`No admin quizzes found for ${currentLanguage}, keeping default quizzes`);
             }
             
-            console.log(`Loaded ${adminLessonsForLang.length} admin lessons, ${adminVocabularyForLang.length} admin vocabulary, ${adminQuizzesForLang.length} admin quizzes for ${currentLanguage}`);
+            console.log(`Final content for ${currentLanguage}:`, {
+                lessons: content[currentLanguage].lessons.length,
+                quizzes: content[currentLanguage].quizzes.length,
+                quizDetails: content[currentLanguage].quizzes
+            });
         }
 
         // Language-specific content
@@ -1059,8 +1071,11 @@
             
             if (quizzes.length === 0) {
                 quizContainer.innerHTML = '<p style="text-align: center; color: #7f8c8d;">아직 퀴즈가 없습니다. 관리자 페이지에서 퀴즈를 추가해주세요.</p>';
+                console.log('No quizzes found, showing empty message');
                 return;
             }
+            
+            console.log('About to show first quiz:', quizzes[0]);
             
             // Show first quiz by default
             showQuiz(0);
@@ -1212,6 +1227,13 @@
             if (savedProgress) {
                 userProgress = JSON.parse(savedProgress);
             }
+            
+            // Debug: Check admin data on load
+            console.log('=== DEBUG: Checking admin data on page load ===');
+            console.log('Admin Lessons:', JSON.parse(localStorage.getItem('adminLessons') || '[]'));
+            console.log('Admin Vocabulary:', JSON.parse(localStorage.getItem('adminVocabulary') || '[]'));
+            console.log('Admin Quizzes:', JSON.parse(localStorage.getItem('adminQuizzes') || '[]'));
+            console.log('=== END DEBUG ===');
             
             // Set default language
             selectLanguage('en');
