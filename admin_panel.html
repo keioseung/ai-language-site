@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 AI Language Learning - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #333;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .admin-header {
+            background: linear-gradient(90deg, #e74c3c, #c0392b, #e74c3c);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .admin-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .admin-nav {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: #ecf0f1;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .admin-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .content-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .content-card h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-meta {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .user-table th,
+        .user-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .user-table th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .vocabulary-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+        }
+
+        .vocabulary-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .option-item input[type="radio"] {
+            width: auto;
+        }
+
+        .option-item input[type="text"] {
+            flex: 1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #27ae60;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <h1>🔧 AI Language Learning - Admin Panel</h1>
+        <p>매일 새로운 AI 학습 콘텐츠를 관리하고 업데이트하세요</p>
+    </div>
+
+    <div class="admin-container">
+        <!-- Navigation -->
+        <div class="admin-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showSection('dashboard')">📊 대시보드</button>
+                <button class="nav-tab" onclick="showSection('lessons')">📚 레슨 관리</button>
+                <button class="nav-tab" onclick="showSection('vocabulary')">📖 어휘 관리</button>
+                <button class="nav-tab" onclick="showSection('quizzes')">🧠 퀴즈 관리</button>
+                <button class="nav-tab" onclick="showSection('users')">👥 사용자 관리</button>
+                <button class="nav-tab" onclick="showSection('analytics')">📈 분석</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="admin-section">
+            <div class="section-header">
+                <h2>📊 관리자 대시보드</h2>
+                <div>
+                    <button class="btn btn-success" onclick="exportData()">📥 데이터 내보내기</button>
+                    <button class="btn btn-warning" onclick="backupData()">💾 백업</button>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalUsers">0</div>
+                    <div class="stat-label">총 사용자</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalLessons">0</div>
+                    <div class="stat-label">총 레슨</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalVocabulary">0</div>
+                    <div class="stat-label">총 어휘</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalQuizzes">0</div>
+                    <div class="stat-label">총 퀴즈</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeUsers">0</div>
+                    <div class="stat-label">활성 사용자</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgScore">0%</div>
+                    <div class="stat-label">평균 점수</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <h3>📅 오늘의 할 일</h3>
+                <div class="content-grid">
+                    <div class="content-card">
+                        <h3>🆕 새 레슨 추가</h3>
+                        <p>오늘 새로운 AI 개념에 대한 레슨을 추가하세요.</p>
+                        <button class="btn" onclick="showSection('lessons')">레슨 추가하기</button>
+                    </div>
+                    <div class="content-card">
+                        <h3>📖 어휘 업데이트</h3>
+                        <p>새로운 AI 용어와 다국어 번역을 추가하세요.</p>
+                        <button class="btn" onclick="showSection('vocabulary')">어휘 관리하기</button>
+                    </div>
+                    <div class="content-card">
+                        <h3>🧠 퀴즈 생성</h3>
+                        <p>학습자들의 이해도를 확인할 퀴즈를 만드세요.</p>
+                        <button class="btn" onclick="showSection('quizzes')">퀴즈 만들기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lessons Section -->
+        <div id="lessons" class="admin-section" style="display: none;">
+            <div class="section-header">
+                <h2>📚 레슨 관리</h2>
+                <button class="btn btn-success" onclick="openLessonModal()">➕ 새 레슨 추가</button>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>언어 선택:</label>
+                    <select id="lessonLanguageFilter">
+                        <option value="all">모든 언어</option>
+                        <option value="en">English</option>
+                        <option value="ko">한국어</option>
+                        <option value="zh">中文</option>
+                        <option value="ja">日本語</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>검색:</label>
+                    <input type="text" id="lessonSearch" placeholder="레슨 제목으로 검색...">
+                </div>
+            </div>
+            
+            <div class="content-grid" id="lessonsGrid">
+                <!-- Lessons will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Vocabulary Section -->
+        <div id="vocabulary" class="admin-section" style="display: none;">
+            <div class="section-header">
+                <h2>📖 어휘 관리</h2>
+                <button class="btn btn-success" onclick="openVocabularyModal()">➕ 새 어휘 추가</button>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>언어 선택:</label>
+                    <select id="vocabLanguageFilter">
+                        <option value="all">모든 언어</option>
+                        <option value="en">English</option>
+                        <option value="ko">한국어</option>
+                        <option value="zh">中文</option>
+                        <option value="ja">日本語</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>검색:</label>
+                    <input type="text" id="vocabSearch" placeholder="어휘로 검색...">
+                </div>
+            </div>
+            
+            <div class="content-grid" id="vocabularyGrid">
+                <!-- Vocabulary will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Quizzes Section -->
+        <div id="quizzes" class="admin-section" style="display: none;">
+            <div class="section-header">
+                <h2>🧠 퀴즈 관리</h2>
+                <button class="btn btn-success" onclick="openQuizModal()">➕ 새 퀴즈 추가</button>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>언어 선택:</label>
+                    <select id="quizLanguageFilter">
+                        <option value="all">모든 언어</option>
+                        <option value="en">English</option>
+                        <option value="ko">한국어</option>
+                        <option value="zh">中文</option>
+                        <option value="ja">日本語</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>검색:</label>
+                    <input type="text" id="quizSearch" placeholder="퀴즈 질문으로 검색...">
+                </div>
+            </div>
+            
+            <div class="content-grid" id="quizzesGrid">
+                <!-- Quizzes will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Users Section -->
+        <div id="users" class="admin-section" style="display: none;">
+            <div class="section-header">
+                <h2>👥 사용자 관리</h2>
+                <button class="btn btn-warning" onclick="exportUserData()">📥 사용자 데이터 내보내기</button>
+            </div>
+            
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>사용자 ID</th>
+                        <th>선호 언어</th>
+                        <th>완료한 레슨</th>
+                        <th>학습한 어휘</th>
+                        <th>평균 점수</th>
+                        <th>학습 시간</th>
+                        <th>마지막 접속</th>
+                        <th>액션</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Users will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics" class="admin-section" style="display: none;">
+            <div class="section-header">
+                <h2>📈 학습 분석</h2>
+                <button class="btn btn-success" onclick="generateReport()">📊 리포트 생성</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="dailyActiveUsers">0</div>
+                    <div class="stat-label">일일 활성 사용자</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="weeklyActiveUsers">0</div>
+                    <div class="stat-label">주간 활성 사용자</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completionRate">0%</div>
+                    <div class="stat-label">레슨 완료율</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgStudyTime">0분</div>
+                    <div class="stat-label">평균 학습 시간</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <h3>📊 언어별 학습 현황</h3>
+                <div class="content-grid" id="languageStats">
+                    <!-- Language statistics will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lesson Modal -->
+    <div id="lessonModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLessonModal()">&times;</span>
+            <h2>📚 새 레슨 추가</h2>
+            
+            <form id="lessonForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>언어:</label>
+                        <select id="lessonLanguage" required>
+                            <option value="en">English</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>레슨 ID:</label>
+                        <input type="number" id="lessonId" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>제목:</label>
+                    <input type="text" id="lessonTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>설명:</label>
+                    <textarea id="lessonDescription" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>콘텐츠 (HTML):</label>
+                    <textarea id="lessonContent" rows="10" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>난이도:</label>
+                    <select id="lessonDifficulty">
+                        <option value="beginner">초급</option>
+                        <option value="intermediate">중급</option>
+                        <option value="advanced">고급</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>예상 학습 시간 (분):</label>
+                    <input type="number" id="lessonDuration" min="5" max="120" value="15">
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-success">💾 레슨 저장</button>
+                    <button type="button" class="btn btn-danger" onclick="closeLessonModal()">❌ 취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Vocabulary Modal -->
+    <div id="vocabularyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeVocabularyModal()">&times;</span>
+            <h2>📖 새 어휘 추가</h2>
+            
+            <form id="vocabularyForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>언어:</label>
+                        <select id="vocabLanguage" required>
+                            <option value="en">English</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>카테고리:</label>
+                        <select id="vocabCategory">
+                            <option value="ai_basics">AI 기초</option>
+                            <option value="machine_learning">머신러닝</option>
+                            <option value="deep_learning">딥러닝</option>
+                            <option value="nlp">자연어처리</option>
+                            <option value="computer_vision">컴퓨터비전</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>용어:</label>
+                    <input type="text" id="vocabTerm" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>다국어 번역:</label>
+                    <textarea id="vocabTranslation" rows="3" placeholder="English / 한국어 / 中文 / 日本語" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>정의:</label>
+                    <textarea id="vocabDefinition" rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>예문:</label>
+                    <textarea id="vocabExample" rows="3"></textarea>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-success">💾 어휘 저장</button>
+                    <button type="button" class="btn btn-danger" onclick="closeVocabularyModal()">❌ 취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quizModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeQuizModal()">&times;</span>
+            <h2>🧠 새 퀴즈 추가</h2>
+            
+            <form id="quizForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>언어:</label>
+                        <select id="quizLanguage" required>
+                            <option value="en">English</option>
+                            <option value="ko">한국어</option>
+                            <option value="zh">中文</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>카테고리:</label>
+                        <select id="quizCategory">
+                            <option value="ai_basics">AI 기초</option>
+                            <option value="machine_learning">머신러닝</option>
+                            <option value="deep_learning">딥러닝</option>
+                            <option value="nlp">자연어처리</option>
+                            <option value="computer_vision">컴퓨터비전</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>질문:</label>
+                    <textarea id="quizQuestion" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>보기:</label>
+                    <div id="quizOptions">
+                        <div class="option-item">
+                            <input type="radio" name="correctAnswer" value="0" required>
+                            <input type="text" placeholder="보기 1" required>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="correctAnswer" value="1">
+                            <input type="text" placeholder="보기 2" required>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="correctAnswer" value="2">
+                            <input type="text" placeholder="보기 3" required>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="correctAnswer" value="3">
+                            <input type="text" placeholder="보기 4" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>설명:</label>
+                    <textarea id="quizExplanation" rows="3" placeholder="정답에 대한 설명"></textarea>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-success">💾 퀴즈 저장</button>
+                    <button type="button" class="btn btn-danger" onclick="closeQuizModal()">❌ 취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Global variables
+        let currentSection = 'dashboard';
+        let lessons = [];
+        let vocabulary = [];
+        let quizzes = [];
+        let users = [];
+
+        // Load data from localStorage
+        function loadData() {
+            lessons = JSON.parse(localStorage.getItem('adminLessons') || '[]');
+            vocabulary = JSON.parse(localStorage.getItem('adminVocabulary') || '[]');
+            quizzes = JSON.parse(localStorage.getItem('adminQuizzes') || '[]');
+            users = JSON.parse(localStorage.getItem('adminUsers') || '[]');
+            
+            updateDashboard();
+            loadLessons();
+            loadVocabulary();
+            loadQuizzes();
+            loadUsers();
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('adminLessons', JSON.stringify(lessons));
+            localStorage.setItem('adminVocabulary', JSON.stringify(vocabulary));
+            localStorage.setItem('adminQuizzes', JSON.stringify(quizzes));
+            localStorage.setItem('adminUsers', JSON.stringify(users));
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.admin-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).style.display = 'block';
+            
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentSection = sectionName;
+        }
+
+        // Dashboard functions
+        function updateDashboard() {
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalLessons').textContent = lessons.length;
+            document.getElementById('totalVocabulary').textContent = vocabulary.length;
+            document.getElementById('totalQuizzes').textContent = quizzes.length;
+            
+            const activeUsers = users.filter(user => {
+                const lastActive = new Date(user.lastActive);
+                const now = new Date();
+                return (now - lastActive) < (24 * 60 * 60 * 1000); // 24 hours
+            }).length;
+            
+            document.getElementById('activeUsers').textContent = activeUsers;
+            
+            const avgScore = users.length > 0 ? 
+                Math.round(users.reduce((sum, user) => sum + (user.avgScore || 0), 0) / users.length) : 0;
+            document.getElementById('avgScore').textContent = avgScore + '%';
+        }
+
+        // Lesson management
+        function loadLessons() {
+            const grid = document.getElementById('lessonsGrid');
+            grid.innerHTML = '';
+            
+            lessons.forEach((lesson, index) => {
+                const card = document.createElement('div');
+                card.className = 'content-card';
+                card.innerHTML = `
+                    <h3>${lesson.title}</h3>
+                    <div class="content-meta">
+                        언어: ${getLanguageName(lesson.language)} | 
+                        ID: ${lesson.id} | 
+                        난이도: ${getDifficultyName(lesson.difficulty)}
+                    </div>
+                    <p>${lesson.description}</p>
+                    <div class="content-actions">
+                        <button class="btn" onclick="editLesson(${index})">✏️ 수정</button>
+                        <button class="btn btn-danger" onclick="deleteLesson(${index})">🗑️ 삭제</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openLessonModal() {
+            document.getElementById('lessonModal').style.display = 'block';
+        }
+
+        function closeLessonModal() {
+            document.getElementById('lessonModal').style.display = 'none';
+            document.getElementById('lessonForm').reset();
+        }
+
+        // Vocabulary management
+        function loadVocabulary() {
+            const grid = document.getElementById('vocabularyGrid');
+            grid.innerHTML = '';
+            
+            vocabulary.forEach((vocab, index) => {
+                const card = document.createElement('div');
+                card.className = 'content-card';
+                card.innerHTML = `
+                    <h3>${vocab.term}</h3>
+                    <div class="content-meta">
+                        언어: ${getLanguageName(vocab.language)} | 
+                        카테고리: ${getCategoryName(vocab.category)}
+                    </div>
+                    <p><strong>번역:</strong> ${vocab.translation}</p>
+                    <p><strong>정의:</strong> ${vocab.definition || '정의 없음'}</p>
+                    <div class="content-actions">
+                        <button class="btn" onclick="editVocabulary(${index})">✏️ 수정</button>
+                        <button class="btn btn-danger" onclick="deleteVocabulary(${index})">🗑️ 삭제</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openVocabularyModal() {
+            document.getElementById('vocabularyModal').style.display = 'block';
+        }
+
+        function closeVocabularyModal() {
+            document.getElementById('vocabularyModal').style.display = 'none';
+            document.getElementById('vocabularyForm').reset();
+        }
+
+        // Quiz management
+        function loadQuizzes() {
+            const grid = document.getElementById('quizzesGrid');
+            grid.innerHTML = '';
+            
+            quizzes.forEach((quiz, index) => {
+                const card = document.createElement('div');
+                card.className = 'content-card';
+                card.innerHTML = `
+                    <h3>${quiz.question.substring(0, 50)}...</h3>
+                    <div class="content-meta">
+                        언어: ${getLanguageName(quiz.language)} | 
+                        카테고리: ${getCategoryName(quiz.category)}
+                    </div>
+                    <p><strong>정답:</strong> ${quiz.options[quiz.correctAnswer]}</p>
+                    <div class="content-actions">
+                        <button class="btn" onclick="editQuiz(${index})">✏️ 수정</button>
+                        <button class="btn btn-danger" onclick="deleteQuiz(${index})">🗑️ 삭제</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openQuizModal() {
+            document.getElementById('quizModal').style.display = 'block';
+        }
+
+        function closeQuizModal() {
+            document.getElementById('quizModal').style.display = 'none';
+            document.getElementById('quizForm').reset();
+        }
+
+        // User management
+        function loadUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+            
+            users.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${getLanguageName(user.preferredLanguage)}</td>
+                    <td>${user.lessonsCompleted}</td>
+                    <td>${user.wordsLearned}</td>
+                    <td>${user.avgScore || 0}%</td>
+                    <td>${Math.floor(user.studyTime / 60)}h ${user.studyTime % 60}m</td>
+                    <td>${new Date(user.lastActive).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn" onclick="viewUserDetails(${index})">👁️ 상세보기</button>
+                        <button class="btn btn-danger" onclick="deleteUser(${index})">🗑️ 삭제</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Utility functions
+        function getLanguageName(code) {
+            const languages = {
+                'en': 'English',
+                'ko': '한국어',
+                'zh': '中文',
+                'ja': '日本語'
+            };
+            return languages[code] || code;
+        }
+
+        function getDifficultyName(difficulty) {
+            const difficulties = {
+                'beginner': '초급',
+                'intermediate': '중급',
+                'advanced': '고급'
+            };
+            return difficulties[difficulty] || difficulty;
+        }
+
+        function getCategoryName(category) {
+            const categories = {
+                'ai_basics': 'AI 기초',
+                'machine_learning': '머신러닝',
+                'deep_learning': '딥러닝',
+                'nlp': '자연어처리',
+                'computer_vision': '컴퓨터비전'
+            };
+            return categories[category] || category;
+        }
+
+        // Form submissions
+        document.getElementById('lessonForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const lesson = {
+                id: parseInt(document.getElementById('lessonId').value),
+                language: document.getElementById('lessonLanguage').value,
+                title: document.getElementById('lessonTitle').value,
+                description: document.getElementById('lessonDescription').value,
+                content: document.getElementById('lessonContent').value,
+                difficulty: document.getElementById('lessonDifficulty').value,
+                duration: parseInt(document.getElementById('lessonDuration').value),
+                createdAt: new Date().toISOString()
+            };
+            
+            lessons.push(lesson);
+            saveData();
+            loadLessons();
+            updateDashboard();
+            closeLessonModal();
+            showNotification('레슨이 성공적으로 추가되었습니다!');
+        });
+
+        document.getElementById('vocabularyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const vocab = {
+                language: document.getElementById('vocabLanguage').value,
+                category: document.getElementById('vocabCategory').value,
+                term: document.getElementById('vocabTerm').value,
+                translation: document.getElementById('vocabTranslation').value,
+                definition: document.getElementById('vocabDefinition').value,
+                example: document.getElementById('vocabExample').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            vocabulary.push(vocab);
+            saveData();
+            loadVocabulary();
+            updateDashboard();
+            closeVocabularyModal();
+            showNotification('어휘가 성공적으로 추가되었습니다!');
+        });
+
+        document.getElementById('quizForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const options = Array.from(document.querySelectorAll('#quizOptions input[type="text"]'))
+                .map(input => input.value);
+            
+            const quiz = {
+                language: document.getElementById('quizLanguage').value,
+                category: document.getElementById('quizCategory').value,
+                question: document.getElementById('quizQuestion').value,
+                options: options,
+                correctAnswer: parseInt(document.querySelector('input[name="correctAnswer"]:checked').value),
+                explanation: document.getElementById('quizExplanation').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            quizzes.push(quiz);
+            saveData();
+            loadQuizzes();
+            updateDashboard();
+            closeQuizModal();
+            showNotification('퀴즈가 성공적으로 추가되었습니다!');
+        });
+
+        // Delete functions
+        function deleteLesson(index) {
+            if (confirm('정말로 이 레슨을 삭제하시겠습니까?')) {
+                lessons.splice(index, 1);
+                saveData();
+                loadLessons();
+                updateDashboard();
+                showNotification('레슨이 삭제되었습니다.', 'error');
+            }
+        }
+
+        function deleteVocabulary(index) {
+            if (confirm('정말로 이 어휘를 삭제하시겠습니까?')) {
+                vocabulary.splice(index, 1);
+                saveData();
+                loadVocabulary();
+                updateDashboard();
+                showNotification('어휘가 삭제되었습니다.', 'error');
+            }
+        }
+
+        function deleteQuiz(index) {
+            if (confirm('정말로 이 퀴즈를 삭제하시겠습니까?')) {
+                quizzes.splice(index, 1);
+                saveData();
+                loadQuizzes();
+                updateDashboard();
+                showNotification('퀴즈가 삭제되었습니다.', 'error');
+            }
+        }
+
+        function deleteUser(index) {
+            if (confirm('정말로 이 사용자를 삭제하시겠습니까?')) {
+                users.splice(index, 1);
+                saveData();
+                loadUsers();
+                updateDashboard();
+                showNotification('사용자가 삭제되었습니다.', 'error');
+            }
+        }
+
+        // Export and backup functions
+        function exportData() {
+            const data = {
+                lessons: lessons,
+                vocabulary: vocabulary,
+                quizzes: quizzes,
+                users: users,
+                exportedAt: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ai_language_learning_data_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            showNotification('데이터가 성공적으로 내보내졌습니다!');
+        }
+
+        function backupData() {
+            saveData();
+            showNotification('데이터가 성공적으로 백업되었습니다!');
+        }
+
+        function exportUserData() {
+            const blob = new Blob([JSON.stringify(users, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `user_data_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            showNotification('사용자 데이터가 성공적으로 내보내졌습니다!');
+        }
+
+        function generateReport() {
+            const report = {
+                totalUsers: users.length,
+                totalLessons: lessons.length,
+                totalVocabulary: vocabulary.length,
+                totalQuizzes: quizzes.length,
+                averageScore: users.length > 0 ? 
+                    Math.round(users.reduce((sum, user) => sum + (user.avgScore || 0), 0) / users.length) : 0,
+                languageDistribution: {},
+                generatedAt: new Date().toISOString()
+            };
+            
+            // Language distribution
+            users.forEach(user => {
+                const lang = user.preferredLanguage;
+                report.languageDistribution[lang] = (report.languageDistribution[lang] || 0) + 1;
+            });
+            
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `learning_report_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            showNotification('리포트가 성공적으로 생성되었습니다!');
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize the admin panel
+        window.onload = function() {
+            loadData();
+            
+            // Add some sample data if empty
+            if (lessons.length === 0) {
+                lessons = [
+                    {
+                        id: 1,
+                        language: 'en',
+                        title: 'What is Artificial Intelligence?',
+                        description: 'Learn the basics of AI and its applications',
+                        content: '<h2>What is AI?</h2><p>AI is a branch of computer science...</p>',
+                        difficulty: 'beginner',
+                        duration: 15,
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                saveData();
+            }
+        };
+    </script>
+</body>
+</html> 
