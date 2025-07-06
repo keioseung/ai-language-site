@@ -1025,7 +1025,8 @@
                 content: document.getElementById('lessonContent').value,
                 difficulty: document.getElementById('lessonDifficulty').value,
                 duration: parseInt(document.getElementById('lessonDuration').value),
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                vocabulary: [] // Initialize empty vocabulary array
             };
             
             lessons.push(lesson);
@@ -1033,7 +1034,7 @@
             loadLessons();
             updateDashboard();
             closeLessonModal();
-            showNotification('레슨이 성공적으로 추가되었습니다!');
+            showNotification('레슨이 성공적으로 추가되었습니다! 학습 페이지에서 확인하세요.');
         });
 
         document.getElementById('vocabularyForm').addEventListener('submit', function(e) {
@@ -1046,6 +1047,7 @@
                 translation: document.getElementById('vocabTranslation').value,
                 definition: document.getElementById('vocabDefinition').value,
                 example: document.getElementById('vocabExample').value,
+                lessonId: 1, // Default lesson ID, can be made dynamic later
                 createdAt: new Date().toISOString()
             };
             
@@ -1054,7 +1056,7 @@
             loadVocabulary();
             updateDashboard();
             closeVocabularyModal();
-            showNotification('어휘가 성공적으로 추가되었습니다!');
+            showNotification('어휘가 성공적으로 추가되었습니다! 학습 페이지에서 확인하세요.');
         });
 
         document.getElementById('quizForm').addEventListener('submit', function(e) {
@@ -1078,7 +1080,7 @@
             loadQuizzes();
             updateDashboard();
             closeQuizModal();
-            showNotification('퀴즈가 성공적으로 추가되었습니다!');
+            showNotification('퀴즈가 성공적으로 추가되었습니다! 학습 페이지에서 확인하세요.');
         });
 
         // Delete functions

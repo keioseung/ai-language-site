@@ -525,6 +525,35 @@
             completedLessons: []
         };
 
+        // Load content from admin panel
+        function loadAdminContent() {
+            const adminLessons = JSON.parse(localStorage.getItem('adminLessons') || '[]');
+            const adminVocabulary = JSON.parse(localStorage.getItem('adminVocabulary') || '[]');
+            const adminQuizzes = JSON.parse(localStorage.getItem('adminQuizzes') || '[]');
+            
+            // Merge admin content with default content
+            if (adminLessons.length > 0) {
+                content[currentLanguage].lessons = adminLessons.filter(lesson => lesson.language === currentLanguage);
+            }
+            
+            // Add admin vocabulary to lessons
+            adminVocabulary.forEach(vocab => {
+                if (vocab.language === currentLanguage) {
+                    // Find the lesson this vocabulary belongs to
+                    const lesson = content[currentLanguage].lessons.find(l => l.id === vocab.lessonId);
+                    if (lesson) {
+                        if (!lesson.vocabulary) lesson.vocabulary = [];
+                        lesson.vocabulary.push(vocab);
+                    }
+                }
+            });
+            
+            // Add admin quizzes
+            if (adminQuizzes.length > 0) {
+                content[currentLanguage].quizzes = adminQuizzes.filter(quiz => quiz.language === currentLanguage);
+            }
+        }
+
         // Language-specific content
         const content = {
             en: {
@@ -860,6 +889,9 @@
                 card.classList.remove('active');
             });
             event.target.closest('.language-card').classList.add('active');
+            
+            // Load admin content for selected language
+            loadAdminContent();
             
             // Show content sections
             document.getElementById('progressSection').style.display = 'block';
