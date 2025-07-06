@@ -1255,23 +1255,233 @@
             document.getElementById('vocabLanguageFilter').addEventListener('change', loadVocabulary);
             document.getElementById('vocabSearch').addEventListener('input', loadVocabulary);
             
-            // Add some sample data if empty
-            if (lessons.length === 0) {
-                lessons = [
-                    {
-                        id: 1,
-                        language: 'en',
-                        title: 'What is Artificial Intelligence?',
-                        description: 'Learn the basics of AI and its applications',
-                        content: '<h2>What is AI?</h2><p>AI is a branch of computer science...</p>',
-                        difficulty: 'beginner',
-                        duration: 15,
-                        createdAt: new Date().toISOString()
-                    }
-                ];
-                saveData();
-            }
+            // Load default content if empty
+            loadDefaultContent();
         };
+
+        // Load default content from learning page
+        function loadDefaultContent() {
+            console.log('=== Loading default content ===');
+            
+            // Default lessons data
+            const defaultLessons = [
+                {
+                    id: 1,
+                    language: 'en',
+                    title: 'What is Artificial Intelligence?',
+                    description: 'Learn the basics of AI and its applications',
+                    content: `<h2>What is Artificial Intelligence?</h2>
+<p>Artificial Intelligence (AI) is a branch of computer science that aims to create machines capable of performing tasks that typically require human intelligence.</p>
+<h3>Key Concepts:</h3>
+<ul>
+<li><strong>Machine Learning:</strong> A subset of AI that enables computers to learn without being explicitly programmed</li>
+<li><strong>Deep Learning:</strong> A type of machine learning based on artificial neural networks</li>
+<li><strong>Natural Language Processing:</strong> The ability of computers to understand and process human language</li>
+<li><strong>Computer Vision:</strong> The field of AI that enables computers to interpret visual information</li>
+</ul>
+<h3>Applications:</h3>
+<ul>
+<li>Virtual assistants (Siri, Alexa)</li>
+<li>Recommendation systems (Netflix, Amazon)</li>
+<li>Autonomous vehicles</li>
+<li>Medical diagnosis</li>
+<li>Financial trading</li>
+</ul>`,
+                    difficulty: 'beginner',
+                    duration: 15,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 1,
+                    language: 'ko',
+                    title: '인공지능이란 무엇인가요?',
+                    description: 'AI의 기본 개념과 응용 분야를 학습',
+                    content: `<h2>인공지능이란 무엇인가요?</h2>
+<p>인공지능(AI)은 일반적으로 인간의 지능이 필요한 작업을 수행할 수 있는 기계를 만드는 것을 목표로 하는 컴퓨터 과학의 한 분야입니다.</p>
+<h3>핵심 개념:</h3>
+<ul>
+<li><strong>머신러닝:</strong> 컴퓨터가 명시적으로 프로그래밍되지 않아도 학습할 수 있게 하는 AI의 하위 집합</li>
+<li><strong>딥러닝:</strong> 인공 신경망을 기반으로 한 머신러닝의 한 유형</li>
+<li><strong>자연어 처리:</strong> 컴퓨터가 인간의 언어를 이해하고 처리하는 능력</li>
+<li><strong>컴퓨터 비전:</strong> 컴퓨터가 시각적 정보를 해석할 수 있게 하는 AI 분야</li>
+</ul>
+<h3>응용 분야:</h3>
+<ul>
+<li>가상 비서 (Siri, Alexa)</li>
+<li>추천 시스템 (Netflix, Amazon)</li>
+<li>자율주행차</li>
+<li>의료 진단</li>
+<li>금융 거래</li>
+</ul>`,
+                    difficulty: 'beginner',
+                    duration: 15,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 1,
+                    language: 'zh',
+                    title: '什么是人工智能？',
+                    description: '学习AI的基本概念和应用领域',
+                    content: `<h2>什么是人工智能？</h2>
+<p>人工智能（AI）是计算机科学的一个分支，旨在创建能够执行通常需要人类智能的任务的机器。</p>
+<h3>核心概念：</h3>
+<ul>
+<li><strong>机器学习：</strong>AI的一个子集，使计算机能够在没有明确编程的情况下学习</li>
+<li><strong>深度学习：</strong>基于人工神经网络的机器学习类型</li>
+<li><strong>自然语言处理：</strong>计算机理解和处理人类语言的能力</li>
+<li><strong>计算机视觉：</strong>使计算机能够解释视觉信息的AI领域</li>
+</ul>
+<h3>应用领域：</h3>
+<ul>
+<li>虚拟助手（Siri、Alexa）</li>
+<li>推荐系统（Netflix、Amazon）</li>
+<li>自动驾驶汽车</li>
+<li>医疗诊断</li>
+<li>金融交易</li>
+</ul>`,
+                    difficulty: 'beginner',
+                    duration: 15,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 1,
+                    language: 'ja',
+                    title: '人工知能とは何か？',
+                    description: 'AIの基本概念と応用分野を学習',
+                    content: `<h2>人工知能とは何か？</h2>
+<p>人工知能（AI）は、通常人間の知能を必要とするタスクを実行できる機械を作成することを目的としたコンピュータサイエンスの一分野です。</p>
+<h3>核心概念：</h3>
+<ul>
+<li><strong>機械学習：</strong>コンピュータが明示的にプログラミングされなくても学習できるようにするAIのサブセット</li>
+<li><strong>ディープラーニング：</strong>人工ニューラルネットワークに基づく機械学習のタイプ</li>
+<li><strong>自然言語処理：</strong>コンピュータが人間の言語を理解し処理する能力</li>
+<li><strong>コンピュータビジョン：</strong>コンピュータが視覚情報を解釈できるようにするAI分野</li>
+</ul>
+<h3>応用分野：</h3>
+<ul>
+<li>仮想アシスタント（Siri、Alexa）</li>
+<li>推薦システム（Netflix、Amazon）</li>
+<li>自動運転車</li>
+<li>医療診断</li>
+<li>金融取引</li>
+</ul>`,
+                    difficulty: 'beginner',
+                    duration: 15,
+                    createdAt: new Date().toISOString()
+                }
+            ];
+
+            // Default vocabulary data
+            const defaultVocabulary = [
+                { language: 'en', category: 'ai_basics', term: 'Artificial Intelligence', translation: '인공지능 / 人工智能 / 人工知能', definition: 'The simulation of human intelligence by machines', example: 'AI is used in virtual assistants like Siri.', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'en', category: 'ai_basics', term: 'Machine Learning', translation: '기계학습 / 机器学习 / 機械学習', definition: 'A subset of AI that enables computers to learn', example: 'Machine learning algorithms improve with more data.', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'en', category: 'ai_basics', term: 'Neural Network', translation: '신경망 / 神经网络 / ニューラルネットワーク', definition: 'A computing system inspired by biological neural networks', example: 'Neural networks are used in image recognition.', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'en', category: 'ai_basics', term: 'Algorithm', translation: '알고리즘 / 算法 / アルゴリズム', definition: 'A set of rules or instructions for solving problems', example: 'Search algorithms help find information quickly.', lessonId: 1, createdAt: new Date().toISOString() },
+                
+                { language: 'ko', category: 'ai_basics', term: '인공지능', translation: 'Artificial Intelligence / 人工智能 / 人工知能', definition: '기계가 인간의 지능을 모방하는 기술', example: '인공지능은 Siri와 같은 가상 비서에 사용됩니다.', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'ko', category: 'ai_basics', term: '머신러닝', translation: 'Machine Learning / 机器学习 / 機械学習', definition: '컴퓨터가 데이터로부터 학습하는 기술', example: '머신러닝 알고리즘은 더 많은 데이터로 개선됩니다.', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'ko', category: 'ai_basics', term: '신경망', translation: 'Neural Network / 神经网络 / ニューラルネットワーク', definition: '생물학적 신경망에서 영감을 받은 컴퓨팅 시스템', example: '신경망은 이미지 인식에 사용됩니다.', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'ko', category: 'ai_basics', term: '알고리즘', translation: 'Algorithm / 算法 / アルゴリズム', definition: '문제를 해결하기 위한 규칙이나 지시사항의 집합', example: '검색 알고리즘은 정보를 빠르게 찾는 데 도움을 줍니다.', lessonId: 1, createdAt: new Date().toISOString() },
+                
+                { language: 'zh', category: 'ai_basics', term: '人工智能', translation: 'Artificial Intelligence / 인공지능 / 人工知能', definition: '机器模拟人类智能的技术', example: '人工智能用于Siri等虚拟助手。', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'zh', category: 'ai_basics', term: '机器学习', translation: 'Machine Learning / 머신러닝 / 機械学習', definition: '使计算机能够从数据中学习的技术', example: '机器学习算法随着更多数据而改进。', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'zh', category: 'ai_basics', term: '神经网络', translation: 'Neural Network / 신경망 / ニューラルネットワーク', definition: '受生物神经网络启发的计算系统', example: '神经网络用于图像识别。', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'zh', category: 'ai_basics', term: '算法', translation: 'Algorithm / 알고리즘 / アルゴリズム', definition: '解决问题的规则或指令集合', example: '搜索算法帮助快速找到信息。', lessonId: 1, createdAt: new Date().toISOString() },
+                
+                { language: 'ja', category: 'ai_basics', term: '人工知能', translation: 'Artificial Intelligence / 인공지능 / 人工智能', definition: '機械が人間の知能を模倣する技術', example: '人工知能はSiriなどの仮想アシスタントに使用されます。', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'ja', category: 'ai_basics', term: '機械学習', translation: 'Machine Learning / 머신러닝 / 机器学习', definition: 'コンピュータがデータから学習する技術', example: '機械学習アルゴリズムはより多くのデータで改善されます。', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'ja', category: 'ai_basics', term: 'ニューラルネットワーク', translation: 'Neural Network / 신경망 / 神经网络', definition: '生物学的ニューラルネットワークにインスパイアされたコンピューティングシステム', example: 'ニューラルネットワークは画像認識に使用されます。', lessonId: 1, createdAt: new Date().toISOString() },
+                { language: 'ja', category: 'ai_basics', term: 'アルゴリズム', translation: 'Algorithm / 알고리즘 / 算法', definition: '問題を解決するためのルールや指示の集合', example: '検索アルゴリズムは情報を素早く見つけるのに役立ちます。', lessonId: 1, createdAt: new Date().toISOString() }
+            ];
+
+            // Default quizzes data
+            const defaultQuizzes = [
+                {
+                    language: 'en',
+                    category: 'ai_basics',
+                    question: 'What is the main goal of Artificial Intelligence?',
+                    options: [
+                        'To replace all human workers',
+                        'To create machines that can perform tasks requiring human intelligence',
+                        'To make computers faster',
+                        'To reduce electricity consumption'
+                    ],
+                    correctAnswer: 1,
+                    explanation: 'AI aims to create machines that can perform tasks that typically require human intelligence.',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    language: 'ko',
+                    category: 'ai_basics',
+                    question: '인공지능의 주요 목표는 무엇인가요?',
+                    options: [
+                        '모든 인간 노동자를 대체하는 것',
+                        '인간의 지능이 필요한 작업을 수행할 수 있는 기계를 만드는 것',
+                        '컴퓨터를 더 빠르게 만드는 것',
+                        '전기 소비를 줄이는 것'
+                    ],
+                    correctAnswer: 1,
+                    explanation: '인공지능은 일반적으로 인간의 지능이 필요한 작업을 수행할 수 있는 기계를 만드는 것을 목표로 합니다.',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    language: 'zh',
+                    category: 'ai_basics',
+                    question: '人工智能的主要目标是什么？',
+                    options: [
+                        '取代所有人类工人',
+                        '创造能够执行需要人类智能的任务的机器',
+                        '让计算机更快',
+                        '减少电力消耗'
+                    ],
+                    correctAnswer: 1,
+                    explanation: '人工智能旨在创造能够执行通常需要人类智能的任务的机器。',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    language: 'ja',
+                    category: 'ai_basics',
+                    question: '人工知能の主な目標は何ですか？',
+                    options: [
+                        'すべての人間労働者を置き換えること',
+                        '人間の知能を必要とするタスクを実行できる機械を作成すること',
+                        'コンピュータをより速くすること',
+                        '電力消費を減らすこと'
+                    ],
+                    correctAnswer: 1,
+                    explanation: '人工知能は、通常人間の知能を必要とするタスクを実行できる機械を作成することを目的としています。',
+                    createdAt: new Date().toISOString()
+                }
+            ];
+
+            // Check if data is empty and load default content
+            let hasChanges = false;
+
+            if (lessons.length === 0) {
+                console.log('Loading default lessons...');
+                lessons = defaultLessons;
+                hasChanges = true;
+            }
+
+            if (vocabulary.length === 0) {
+                console.log('Loading default vocabulary...');
+                vocabulary = defaultVocabulary;
+                hasChanges = true;
+            }
+
+            if (quizzes.length === 0) {
+                console.log('Loading default quizzes...');
+                quizzes = defaultQuizzes;
+                hasChanges = true;
+            }
+
+            if (hasChanges) {
+                saveData();
+                console.log('✅ Default content loaded successfully');
+            } else {
+                console.log('ℹ️ Content already exists, skipping default content load');
+            }
+        }
     </script>
 </body>
 </html> 
