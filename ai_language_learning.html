@@ -903,6 +903,7 @@
             // Load content
             loadLessons();
             loadVocabulary();
+            loadQuizzes();
             updateProgress();
             updateStats();
         }
@@ -981,6 +982,135 @@
                 `;
                 vocabGrid.appendChild(vocabCard);
             });
+        }
+
+        // Load quizzes
+        function loadQuizzes() {
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.innerHTML = '';
+            
+            const quizzes = content[currentLanguage].quizzes;
+            
+            if (quizzes.length === 0) {
+                quizContainer.innerHTML = '<p style="text-align: center; color: #7f8c8d;">아직 퀴즈가 없습니다. 관리자 페이지에서 퀴즈를 추가해주세요.</p>';
+                return;
+            }
+            
+            // Show first quiz by default
+            showQuiz(0);
+            
+            // Add quiz navigation
+            const quizNav = document.createElement('div');
+            quizNav.style.textAlign = 'center';
+            quizNav.style.marginTop = '2rem';
+            
+            quizzes.forEach((quiz, index) => {
+                const quizBtn = document.createElement('button');
+                quizBtn.className = 'btn';
+                quizBtn.textContent = `퀴즈 ${index + 1}`;
+                quizBtn.onclick = () => showQuiz(index);
+                quizNav.appendChild(quizBtn);
+            });
+            
+            quizContainer.appendChild(quizNav);
+        }
+
+        // Show specific quiz
+        function showQuiz(quizIndex) {
+            const quizContainer = document.getElementById('quizContainer');
+            const quizzes = content[currentLanguage].quizzes;
+            
+            if (quizIndex >= quizzes.length) return;
+            
+            const quiz = quizzes[quizIndex];
+            
+            let quizHTML = `
+                <div class="question">
+                    <h3>${quiz.question}</h3>
+                </div>
+                <div class="options">
+            `;
+            
+            quiz.options.forEach((option, index) => {
+                quizHTML += `
+                    <div class="option" onclick="selectAnswer(${quizIndex}, ${index})">
+                        ${option}
+                    </div>
+                `;
+            });
+            
+            quizHTML += `
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn" onclick="checkAnswer(${quizIndex})" id="checkBtn" disabled>정답 확인</button>
+                </div>
+                <div id="quizResult" style="margin-top: 1rem; text-align: center;"></div>
+            `;
+            
+            // Replace existing quiz content
+            const existingQuiz = quizContainer.querySelector('.question');
+            if (existingQuiz) {
+                existingQuiz.parentElement.remove();
+            }
+            
+            quizContainer.insertAdjacentHTML('afterbegin', quizHTML);
+        }
+
+        // Select answer
+        function selectAnswer(quizIndex, optionIndex) {
+            // Remove previous selection
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Select current option
+            event.target.classList.add('selected');
+            
+            // Enable check button
+            document.getElementById('checkBtn').disabled = false;
+            
+            // Store selected answer
+            window.selectedAnswer = optionIndex;
+        }
+
+        // Check answer
+        function checkAnswer(quizIndex) {
+            const quiz = content[currentLanguage].quizzes[quizIndex];
+            const selectedAnswer = window.selectedAnswer;
+            const resultDiv = document.getElementById('quizResult');
+            
+            if (selectedAnswer === undefined) {
+                resultDiv.innerHTML = '<p style="color: #e74c3c;">답을 선택해주세요!</p>';
+                return;
+            }
+            
+            const isCorrect = selectedAnswer === quiz.correctAnswer;
+            const score = isCorrect ? 100 : 0;
+            
+            // Add to user progress
+            userProgress.quizScores.push(score);
+            
+            // Show result
+            if (isCorrect) {
+                resultDiv.innerHTML = `
+                    <div style="color: #27ae60; font-weight: bold; font-size: 1.2rem;">
+                        ✅ 정답입니다! (점수: ${score}점)
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div style="color: #e74c3c; font-weight: bold; font-size: 1.2rem;">
+                        ❌ 틀렸습니다. 정답: ${quiz.options[quiz.correctAnswer]}
+                    </div>
+                `;
+            }
+            
+            // Update progress
+            updateProgress();
+            updateStats();
+            
+            // Disable check button
+            document.getElementById('checkBtn').disabled = true;
         }
 
         // Update progress
